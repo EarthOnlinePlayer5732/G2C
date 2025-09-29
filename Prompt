@@ -1,0 +1,89 @@
+Objective:
+
+Generate synthetic error correction data for aspect-based sentiment analysis quadruples, strictly adhering to the specified format requirements and aiming for plausible, diverse errors.
+
+Core Task:
+
+For each input consisting of an original sentence and its corresponding correct sentiment quadruples (potentially using conceptual sentiment labels like 'positive', 'neutral', 'negative'), generate **six lines of output**: **five plausible and diverse distinct error correction data lines** and **one correct baseline data line**, using the specified template and vocabulary.
+
+Format Rules:
+
+Input Assumption (for the generation task):
+
+*   An original sentence.
+*   A set of one or more correct sentiment quadruples corresponding to that sentence. These input quadruples might represent sentiment conceptually (e.g., 'positive', 'neutral', 'negative').
+
+Output Generation (per input):
+
+Generate exactly **six lines** of text.
+
+**Lines 1-5 Format (Error Correction Data Format):**
+`Original Sentence [SENTSEP] <Modified Quadruples Section> #### <Original Correct Quadruples Section>`
+
+*   **<Modified Quadruples Section>:**
+    *   Contains the sequence of quadruples where at least one (and up to all) quadruples have been intentionally modified to contain exactly one error each, following the "Required Error Types" rules below.
+    *   Quadruples not selected for error introduction remain in their original, correct form in this section (using the output template and vocabulary).
+    *   Quadruples are separated by `[SSEP]`.
+*   **<Original Correct Quadruples Section>:**
+    *   Contains all the original, correct quadruples, rendered using the output template and vocabulary specified below.
+    *   Quadruples are separated by `[SSEP]`.
+*   **Requirement for Lines 1-5:** Each of these five lines must introduce a **different and plausible set of errors** into the `<Modified Quadruples Section>`. Strive for variety across the five error lines by:
+    *   Varying the **type** of error introduced (Aspect, Category, Sentiment, Opinion). Aim to include examples of all error types across the 5 lines if possible.
+    *   Varying the **quadruple(s)** being modified (if multiple quadruples exist in the input).
+    *   Varying the **number** of quadruples modified per line (sometimes modify just one, sometimes modify multiple if available, up to all).
+    *   Using different **incorrect terms/categories/sentiments** for the same type of error across different lines where applicable.
+    The goal is to simulate realistic mistakes or ambiguities, creating challenging correction examples.
+
+**Line 6 Format (Correct Baseline Format):**
+`Original Sentence [SENTSEP] <Original Correct Quadruples Section> #### <Original Correct Quadruples Section>`
+
+*   This line contains the original sentence, followed by all the original, correct quadruples (rendered using the output template and vocabulary) before the `####` separator, and all the original, correct quadruples (rendered using the output template and vocabulary) again after the `####` separator.
+*   Quadruples are separated by `[SSEP]` in both sections.
+
+Quadruple Template and Vocabulary:
+
+*   Use the following structure for each output quadruple:
+    ` [aspect_category] is [sentiment] because [aspect] is [opinion]`   (注意[aspect]  [opinion]之间务必使用is)
+*   **Sentiment Values (Output):** Use ONLY "great", "bad", or "ok" in the output quadruples.
+*   **Sentiment Mapping:** If the input quadruples use conceptual labels, map them as follows for the output:
+    *   positive -> "great"
+    *   neutral -> "ok"
+    *   negative -> "bad"
+*   **Aspect Handling:** When the original correct [aspect] term is "NULL", render it as "it" in the output quadruple (e.g., ... because it is [opinion]). When generating errors, this "it" behaves like any other aspect term based on the error rules.
+*   **Predefined Aspect Categories:** The valid [aspect_category] values are strictly limited to the following list:
+    `location general, food prices, food quality, food general, ambience general, service general, restaurant prices, drinks prices, restaurant miscellaneous, drinks quality, drinks style_options, restaurant general, food style_options`
+
+Required Error Types (for introduction in Lines 1-5's <Modified Quadruples Section>):
+
+*   **Guiding Principle:** Errors should aim to be **plausible misinterpretations or mistakes someone might realistically make**, rather than completely random or nonsensical changes. Avoid trivial changes where possible. The resulting modified quadruple fragment (`... because [aspect] is [opinion]`) should ideally remain somewhat readable, even if incorrect.
+*   Errors must be introduced by modifying exactly one component of a chosen quadruple.
+*   Randomly select the type of error to introduce for each modified quadruple, aiming for diversity across the 5 lines as specified above.
+*   The content of the error depends on the type:
+    *   **Aspect Error:** Replace [aspect] (or "it" if the original was NULL) with a plausible but incorrect term found within the original sentence. The replacement must be different from the correct aspect term (or different from "it"). **Aim for terms that might be easily confused with the correct aspect, represent a subtle misinterpretation based on sentence context, or are semantically related but wrong. Consider matching the grammatical role (e.g., noun/noun phrase) if possible.**
+    *   **Category Error:** Replace [aspect_category] with an incorrect category chosen from the explicit Predefined Aspect Categories list provided above. The chosen category must be different from the correct one. **Prefer choosing a *semantically related but incorrect* category (e.g., confusing `food quality` with `food prices`, or `food quality` with `food general`) to make the error more subtle and realistic.**
+    *   **Sentiment Error:** Replace [sentiment] (which will be "great", "bad", or "ok") with a different value from this same list ("great", "bad", "ok"). The chosen sentiment must be different from the correct one. **This should represent a plausible misclassification of the sentiment expressed towards the aspect, perhaps due to tricky phrasing in the sentence.**
+    *   **Opinion Error:** Replace [opinion] with a plausible but incorrect term found within the original sentence. The replacement must be different from the correct opinion term. **Aim for terms that might be easily confused with the correct opinion, represent a subtle misinterpretation, or are semantically related but wrong. Consider matching the grammatical role (e.g., adjective/adverb) if possible.**
+
+Example Output (Illustrative for one input sentence, now generating 5 error lines + 1 correct line):
+# Input: Sentence="The sushi was fresh but overpriced.", CorrectQuads=[(food quality, positive, sushi, fresh), (food prices, negative, sushi, overpriced)]
+
+# Output Lines to Generate (Example - errors will vary based on the refined rules):
+The sushi was fresh but overpriced. [SENTSEP]  food general is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+The sushi was fresh but overpriced. [SENTSEP]  food quality is great because fresh is fresh [SSEP]  food prices is bad because sushi is overpriced ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+The sushi was fresh but overpriced. [SENTSEP]  food quality is ok because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+The sushi was fresh but overpriced. [SENTSEP]  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is fresh ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+The sushi was fresh but overpriced. [SENTSEP]  food quality is great because sushi is fresh [SSEP]  restaurant prices is bad because sushi is overpriced ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+The sushi was fresh but overpriced. [SENTSEP]  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced ####  food quality is great because sushi is fresh [SSEP]  food prices is bad because sushi is overpriced
+
+
+(Note: In this example, Lines 1-5 illustrate potentially plausible errors introduced in the section before ####, guided by the refined rules. Line 1: Related Category Error. Line 2: Aspect Error using a word from the sentence. Line 3: Sentiment Error. Line 4: Opinion Error using another word from the sentence. Line 5: Another related Category Error in the second quad. The section after #### in lines 1-5, and both sections in Line 6, contain the correctly rendered original quadruples).
+
+Strict Output Constraints:
+
+*   Output ONLY the data lines.
+*   Do NOT include any explanatory text, headers, or comments (like `# Input: ...` or `# Output Lines...` above) in the final output.
+*   Do NOT use labels like "Error Sample:", "Correct Sample:", etc.
+*   Do NOT use numbering (e.g., 1., 2.).
+*   Do NOT include descriptions of the error types introduced within the output lines.
+*   Strictly adhere to the specified format, including the exact separators `[SENTSEP]`, `[SSEP]`, and `####`.
+*   **For each input, generate exactly 6 lines of output.** """
