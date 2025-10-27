@@ -1,0 +1,13 @@
+aspect_cate_list = ['location general',
+                    'food prices',
+                    'food quality',
+                    'food general',
+                    'ambience general',
+                    'service general',
+                    'restaurant prices',
+                    'drinks prices',
+                    'restaurant miscellaneous',
+                    'drinks quality',
+                    'drinks style_options',
+                    'restaurant general',
+                    'food style_options']
