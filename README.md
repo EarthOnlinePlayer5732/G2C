@@ -2,7 +2,7 @@
 
 This repo contains the code and prompt for our paper "GENERATE THEN CORRECT: SINGLE SHOT GLOBAL CORRECTION FOR ASPECT SENTIMENT QUAD PREDICTION", which is submitted to ICASSP 2026.
 
-Organizing and uploading the code
+
 
 ## Requirements
 - transformers==4.44.0
