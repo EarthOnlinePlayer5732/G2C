@@ -43,7 +43,7 @@ Generate exactly **six lines** of text.
 Quadruple Template and Vocabulary:
 
 *   Use the following structure for each output quadruple:
-    ` [aspect_category] is [sentiment] because [aspect] is [opinion]`   (注意[aspect]  [opinion]之间务必使用is)
+    ` [aspect_category] is [sentiment] because [aspect] is [opinion]`   
 *   **Sentiment Values (Output):** Use ONLY "great", "bad", or "ok" in the output quadruples.
 *   **Sentiment Mapping:** If the input quadruples use conceptual labels, map them as follows for the output:
     *   positive -> "great"
