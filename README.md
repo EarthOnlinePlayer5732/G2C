@@ -1,6 +1,6 @@
-# GENERATE THEN CORRECT: SINGLE SHOT GLOBAL CORRECTION FOR ASPECT SENTIMENT QUAD PREDICTION
+# Generate Then Correct: Single-Shot Global Correction for Aspect Sentiment Quad Prediction
 
-This repo contains the code and prompt for our paper "GENERATE THEN CORRECT: SINGLE SHOT GLOBAL CORRECTION FOR ASPECT SENTIMENT QUAD PREDICTION".
+This repo contains the code and prompt for our paper "Generate Then Correct: Single-Shot Global Correction for Aspect Sentiment Quad Prediction".
 
 
 
